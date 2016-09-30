@@ -63,10 +63,13 @@ class BRCacheConnection{
 	
 	private $receiver;
 	
-	function __construct($host = "localhost", $port = 1044){
+	private $pcon;
+	
+	function __construct($host = "localhost", $port = 1044, $pcon = true){
 		$this->host      = $host;
 		$this->port      = $port;
-		$this->pointer   = pfsockopen($this->$host, $port);
+		$this->pcon      = $pcon;
+		$this->pointer   = $pcon? pfsockopen($this->$host, $port) : fsockopen($this->$host, $port);
 		$this->sender    = new BRCacheSender();  
 		$this->receiver  = new BRCacheReceiver();  
 	}
@@ -78,6 +81,10 @@ class BRCacheConnection{
 	 * fechar a conexão com o servidor.
 	 */
 	public function close(){
+		if($this->pcon){
+			throw new CacheException("can't close this connection");
+		}
+		fclose($this->pointer);
 	}
 	
 	/**
@@ -85,7 +92,7 @@ class BRCacheConnection{
 	 * @return <code>true</code> se a conexão está fechada. Caso contrátio, <code>false</code>.
 	 */
 	public function isClosed(){
-		return false;
+		return !is_resource($this->pointer);
 	}
 	
 	/* métodos de coleta*/
@@ -118,7 +125,9 @@ class BRCacheConnection{
 	 * @param key chave associada ao valor.
 	 * @param oldValue valor esperado associado à chave.
 	 * @param newValue valor para ser associado à chave.
-	 * @param maxAliveTime tempo máximo de vida do valor no cache.
+	 * @param cmp função que faz a comparação entre o valor atual e o novo valor.
+	 * @param timeToLive é a quantidade máxima de tempo que um item expira após sua criação.
+	 * @param timeToIdle é a quantidade máxima de tempo que um item expira após o último acesso.
 	 * @return <code>true</code> se o valor for substituido. Caso contrário, <code>false</code>.
 	 * @throws CacheException Lançada se ocorrer alguma falha com o servidor.
 	 */
@@ -152,7 +161,8 @@ class BRCacheConnection{
 	 * Associa o valor a chave somente se a chave não estiver associada a um valor.
 	 * @param key chave associada ao valor.
 	 * @param value valor para ser associado à chave.
-	 * @param maxAliveTime tempo máximo de vida do valor no cache.
+	 * @param timeToLive é a quantidade máxima de tempo que um item expira após sua criação.
+	 * @param timeToIdle é a quantidade máxima de tempo que um item expira após o último acesso.
 	 * @return valor anterior associado à chave.
 	 * @throws CacheException Lançada se ocorrer alguma falha com o servidor.
 	 */
@@ -202,7 +212,8 @@ class BRCacheConnection{
 	 * Associa o valor a chave somente se a chave não estiver associada a um valor.
 	 * @param key chave associada ao valor.
 	 * @param value valor para ser associado à chave.
-	 * @param maxAliveTime tempo máximo de vida do valor no cache.
+	 * @param timeToLive é a quantidade máxima de tempo que um item expira após sua criação.
+	 * @param timeToIdle é a quantidade máxima de tempo que um item expira após o último acesso.
 	 * @return <code>true</code> se o valor for substituído. Caso contrário, <code>false</code>.
 	 * @throws CacheException Lançada se ocorrer alguma falha com o servidor.
 	 */
@@ -248,16 +259,38 @@ class BRCacheConnection{
 	/* métodos de remoção */
 	
 	/**
+	 * Remove o valor associado à chave.
+	 * @param key chave associada ao valor.
+	 * @return <code>true</code> se o valor for removido. Caso contrário, <code>false</code>.
+     * @throws CacheException Lançada se ocorrer alguma falha com o servidor.
+	 */
+	public function remove($key){
+		
+    	try{
+	    	$this->sender->remove($this->pointer, $key);
+	        return $this->receiver->processRemoveResult($this->pointer);
+    	}
+		catch(CacheException $e){
+			throw e;
+		}
+    	catch(Exception $e){
+    		throw new CacheException(e);
+    	}
+						
+	}
+
+	/**
 	 * Remove o valor assoiado à chave somente se ele for igual a um determinado valor.
 	 * @param key chave associada ao valor.
-	 * @return valor para ser associado à chave.
+	 * @param value valor associado à chave.
+	 * @param cmp função que faz a comparação do valor com o que será removido.
 	 * @return <code>true</code> se o valor for removido. Caso contrário, <code>false</code>.
 	 * @throws CacheException Lançada se ocorrer alguma falha com o servidor.
 	 */
-	public function remove($key, $value = null, $cmp = null){
-		
+	public function removeValue($key, $value, $cmp){
+	
 		$localTransaction = null;
-		
+	
 		try{
 			$localTransaction = $this->startLocalTransaction();
 			$o = $this->get(key, true);
@@ -266,14 +299,14 @@ class BRCacheConnection{
 			}
 			else
 				$result = false;
-				
+	
 			$this->commitLocalTransaction($localTransaction);
 			return result;
 		}
 		catch(Exception $e){
 			throw $this->rollbackLocalTransaction($localTransaction, $e);
 		}
-				
+	
 	}
 	
 	/**
