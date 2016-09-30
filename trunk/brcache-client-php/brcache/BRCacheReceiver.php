@@ -1,4 +1,6 @@
 <?php
+require_once 'CacheException.php';
+
 class BRCacheReceiver{
 	
 	function __construct(){
@@ -15,7 +17,7 @@ class BRCacheReceiver{
 				return true;
 			default:
 				$error = $this->parseError($resp);
-				throw new Exception($error->message, $error->code);
+				throw new CacheException($error->message, $error->code);
 		}
 				
 	}
@@ -31,7 +33,7 @@ class BRCacheReceiver{
 				return false;
 			default:
 				$error = $this->parseError($resp);
-				throw new Exception($error->message, $error->code);
+				throw new CacheException($error->message, $error->code);
 		}
 	
 	}
@@ -46,14 +48,14 @@ class BRCacheReceiver{
 			$boundary = $this->readLine($con);
 				
 			if(!strcmp($boundary, BRCacheConnection::$BOUNDARY)){
-				throw new Exception("expected end");
+				throw new CacheException("expected end");
 			}
 				
 			return $entry == null? null : unserialize($entry->dta);
 		}
 		else{
 			$error = $this->parseError($resp);
-			throw new Exception($error->message, $error->code);
+			throw new CacheException($error->message, $error->code);
 		}
 	
 	}
@@ -75,7 +77,7 @@ class BRCacheReceiver{
 		
 		if(!strcmp($resp, BRCacheConnection::$BOUNDARY)){
 			$error = $this->parseError($resp);
-			throw new Exception($error->message, $error->code);
+			throw new CacheException($error->message, $error->code);
 		}
 		
 		return $result;
@@ -92,7 +94,7 @@ class BRCacheReceiver{
 				return false;
 			default:
 				$error = $this->parseError($resp);
-				throw new Exception($error->message, $error->code);
+				throw new CacheException($error->message, $error->code);
 		}
 	
 	}
@@ -108,21 +110,21 @@ class BRCacheReceiver{
 				return false;
 			default:
 				$error = $this->parseError($resp);
-				throw new Exception($error->message, $error->code);
+				throw new CacheException($error->message, $error->code);
 		}
 	
 	}
 
-	public function processBeginTransactionResult(){
-		$this->processDefaultTransactionCommandResult();
+	public function processBeginTransactionResult($con){
+		$this->processDefaultTransactionCommandResult($con);
 	}
 	
-	public function processCommitTransactionResult(){
-		$this->processDefaultTransactionCommandResult();
+	public function processCommitTransactionResult($con){
+		$this->processDefaultTransactionCommandResult($con);
 	}
 	
-	public function processRollbackTransactionResult(){
-		$this->processDefaultTransactionCommandResult();
+	public function processRollbackTransactionResult($con){
+		$this->processDefaultTransactionCommandResult($con);
 	}
 	
 	public function processDefaultTransactionCommandResult($con){
@@ -131,7 +133,7 @@ class BRCacheReceiver{
 	
 		if($resp[0] != 'o'){
 			$error = $this->parseError($resp);
-			throw new Exception($error->message, $error->code);
+			throw new CacheException($error->message, $error->code);
 		}
 		
 	}
@@ -151,7 +153,7 @@ class BRCacheReceiver{
 		}
 		else{
 			$error = $this->parseError($resp);
-			throw new Exception($error->message, $error->code);
+			throw new CacheException($error->message, $error->code);
 		}
 	
 	}
@@ -162,7 +164,7 @@ class BRCacheReceiver{
 	
 		if($resp[0] != 'o'){
 			$error = $this->parseError($resp);
-			throw new Exception($error->message, $error->code);
+			throw new CacheException($error->message, $error->code);
 		}
 			
 	}
@@ -180,7 +182,7 @@ class BRCacheReceiver{
 			//$end = fread($con, 2);
 			
 			//if(!strcmp($end, BRCacheConnection::$CRLF)){
-			//	throw new Exception("corrupted data: " . $key);
+			//	throw new CacheException("corrupted data: " . $key);
 			//}
 			
 			$entry = new stdClass();
@@ -200,8 +202,8 @@ class BRCacheReceiver{
 	}
 	
 	private function parseError($resp){
-		$code    = substr($resp, 6, 10);
-		$message = substr($resp, 12, strlen($resp));
+		$code    = substr($resp, 6, 4);
+		$message = substr($resp, 12, strlen($resp) - 12);
 		
 		$error = new stdClass();
 		$error->code    = $code;

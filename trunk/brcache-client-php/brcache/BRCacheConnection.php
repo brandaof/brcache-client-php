@@ -1,6 +1,7 @@
 <?php
 require_once 'BRCacheSender.php';
 require_once 'BRCacheReceiver.php';
+require_once 'CacheException.php';
 
 /**
  * Permite o armazenamento, atualização, remoção de um item em um servidor BrCache.
@@ -224,13 +225,13 @@ class BRCacheConnection{
 			$this->sender->set($this->pointer, $key, $value, $timeToLive, $timeToIdle);
 			return $this->receiver->processSetResult($this->pointer);
 		}
-		catch(CacheException $e){
-			throw e;
+			catch(CacheException $e){
+			throw $e;
 		}
 		catch(Exception $e){
-			throw new CacheException($e);
+			throw new CacheException(null, null, $e);
 		}
-		
+				
 	}
 	
 	/**
@@ -247,13 +248,13 @@ class BRCacheConnection{
 			$this->sender->get($this->pointer, $key, $forUpdate);
 			return $this->receiver->processGetResult($this->pointer);
 		}
-		catch(CacheException $e){
-			throw e;
+			catch(CacheException $e){
+			throw $e;
 		}
 		catch(Exception $e){
-			throw new CacheException(e);
+			throw new CacheException(null, null, $e);
 		}
-		
+				
 	}
 	
 	/* métodos de remoção */
@@ -271,12 +272,12 @@ class BRCacheConnection{
 	        return $this->receiver->processRemoveResult($this->pointer);
     	}
 		catch(CacheException $e){
-			throw e;
+			throw $e;
 		}
-    	catch(Exception $e){
-    		throw new CacheException(e);
-    	}
-						
+		catch(Exception $e){
+			throw new CacheException(null, null, $e);
+		}
+    							
 	}
 
 	/**
@@ -312,8 +313,8 @@ class BRCacheConnection{
 	/**
 	 * Define o modo de confirmação automática. Se o modo de confirmação automática
 	 * estiver ligado, todas as operações serão tratadas como transações individuais. Caso contrário,
-	 * as operações serão agrupadas em uma transação que deve ser confirmada com o método {@link #commit()} ou
-	 * descartadas com o método {@link #rollback()}. Por padrão, cada nova conexão inicia com o
+	 * as operações serão agrupadas em uma transação que deve ser confirmada com o método {@link BRCacheConnection::commit()} ou
+	 * descartadas com o método {@link BRCacheConnection::rollback()}. Por padrão, cada nova conexão inicia com o
 	 * modo de confirmação automática ligado.
 	 * @param value <code>true</code> para ligar o modo de confirmação automática. Caso contrário, <code>false</code>.
 	 * @throws CacheException Lançada se o estado desejado já estiver em vigor ou se a conexão estiver fechada.
@@ -321,16 +322,16 @@ class BRCacheConnection{
 	public function setAutoCommit($value){
 		
 		try{
-			$this->sender->setVar($this->pointer, "auto_commit", $value);
+			$this->sender->setVar($this->pointer, "auto_commit", $value? "true" : "false");
 			$this->receiver->processSetVarResult($this->pointer);
 		}
 		catch(CacheException $e){
-			throw e;
+			throw $e;
 		}
 		catch(Exception $e){
-			throw new CacheException(e);
+			throw new CacheException(null, null, $e);
 		}
-		
+				
 	}
 	
 	/**
@@ -342,15 +343,15 @@ class BRCacheConnection{
 		try{
 			$this->sender->showVar($this->pointer, "auto_commit");
 			$var = $this->receiver->processShowVarResult($this->pointer, "auto_commit");
-			return strcmp($var,"true");
+			return strcmp($var,"true") == 0;
 		}
 		catch(CacheException $e){
-			throw e;
+			throw $e;
 		}
 		catch(Exception $e){
-			throw new CacheException($e);
+			throw new CacheException(null, null, $e);
 		}
-	}
+			}
 	
 	/**
 	 * Confirma todas as operações da transação atual e libera todos os bloqueios detidos por essa conexão.
@@ -363,10 +364,10 @@ class BRCacheConnection{
 			$this->receiver->processCommitTransactionResult($this->pointer);
 		}
 		catch(CacheException $e){
-			throw e;
+			throw $e;
 		}
 		catch(Exception $e){
-			throw new CacheException($e);
+			throw new CacheException(null, null, $e);
 		}
 	}
 	
@@ -380,12 +381,12 @@ class BRCacheConnection{
     		$this->sender->rollbackTransaction($this->pointer);
     		$this->receiver->processRollbackTransactionResult($this->pointer);
     	}
-    	catch(CacheException $e){
-    		throw e;
-    	}
-    	catch(Exception $e){
-    		throw new CacheException($e);
-    	}
+		catch(CacheException $e){
+			throw $e;
+		}
+		catch(Exception $e){
+			throw new CacheException(null, null, $e);
+		}
 	}
 	
 	/**
@@ -432,7 +433,7 @@ class BRCacheConnection{
 			return new CacheException("rollback fail: " + ex.toString(), 0, e);
 		}
 	
-		if(is_a(e, "CacheException")){
+		if(is_a($e, "CacheException")){
 			return $e;
 		}
 		else{
