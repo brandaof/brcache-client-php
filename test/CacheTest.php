@@ -18,44 +18,44 @@ class CacheTest extends TestCase{
 	public function testReplace(){
 		$prefixKEY = "testReplace:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
-		$this->assertFalse(con.replace(prefixKEY + $this->KEY, $this->VALUE, 0, 0));
+		$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, 0, 0));
 	}
 	
 	public function testReplaceSuccess(){
 		$prefixKEY = "testReplaceSuccess:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		con.put(prefixKEY + KEY, VALUE, 0, 0);
-		TestCase.assertEquals(VALUE, con.get(prefixKEY + KEY));
-		TestCase.assertTrue(con.replace(prefixKEY + KEY, VALUE2, 0, 0));
-		TestCase.assertEquals(VALUE2, con.get(prefixKEY + KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
+		$this->assertTrue($con->replace($prefixKEY + $this->KEY, $this->VALUE2, 0, 0));
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testReplaceExact(){
 		$prefixKEY = "testReplaceSuccess:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 		try{
-			TestCase.assertFalse(con.replace(prefixKEY + KEY, VALUE, VALUE2, 0, 0));
-			fail("expected error 1009");
+			$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
+			$this->fail("expected error 1009");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1009){
-				fail("expected error 1009");
+		catch(CacheException $e){
+			if($e->getCode() != 1009){
+				$this->fail("expected error 1009");
 			}
 		}
 	}
 	
 	public function testReplaceExactSuccess(){
 		$prefixKEY = "testReplaceExactSuccess:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			con.replace(prefixKEY + KEY, VALUE, VALUE2, 0, 0);
-			fail("expected error 1009");
+			$con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0);
+			$this->fail("expected error 1009");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1009){
-				fail("expected error 1009");
+		catch(CacheException $e){
+			if($e->getCode() != 1009){
+				$this->fail("expected error 1009");
 			}
 		}
 	}
@@ -64,30 +64,30 @@ class CacheTest extends TestCase{
 	
 	public function testputIfAbsent(){
 		$prefixKEY = "testputIfAbsent:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			con.putIfAbsent(prefixKEY + KEY, VALUE, 0, 0);
-			fail("expected error 1009");
+			$con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
+			$this->fail("expected error 1009");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1009){
-				fail("expected error 1009");
+		catch(CacheException $e){
+			if($e->getCode() != 1009){
+				$this->fail("expected error 1009");
 			}
 		}
 	}
 	
 	public function testputIfAbsentExistValue(){
 		$prefixKEY = "testputIfAbsentExistValue:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			TestCase.assertEquals(VALUE, con.putIfAbsent(prefixKEY + KEY, VALUE2, 0, 0));
-			fail("expected error 1009");
+			$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE2, 0, 0));
+			$this->fail("expected error 1009");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1009){
-				fail("expected error 1009");
+		catch(CacheException $e){
+			if($e->getCode() != 1009){
+				$this->fail("expected error 1009");
 			}
 		}
 	}
@@ -96,48 +96,48 @@ class CacheTest extends TestCase{
 	
 	public function testPut(){
 		$prefixKEY = "testPut:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		TestCase.assertNull(con.get(prefixKEY + KEY));
-		con.put(prefixKEY + KEY, VALUE, 0, 0);
-		TestCase.assertEquals(VALUE, con.get(prefixKEY + KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
 	}
 	
 	/* get */
 	
 	public function testGet(){
 		$prefixKEY = "testGet:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		TestCase.assertNull(con.get(prefixKEY + KEY));
-		con.put(prefixKEY + KEY, VALUE, 0, 0);
-		TestCase.assertEquals(VALUE, con.get(prefixKEY + KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testGetOverride(){
 		$prefixKEY = "testGetOverride:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		TestCase.assertNull(con.get(prefixKEY + KEY));
-		con.put(prefixKEY + KEY, VALUE, 0, 0);
-		TestCase.assertEquals(VALUE, con.get(prefixKEY + KEY));
-		con.put(prefixKEY + KEY, VALUE2, 0, 0);
-		TestCase.assertEquals(VALUE2, con.get(prefixKEY + KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE2, 0, 0);
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY + $this->KEY));
 	}
 	
 	/* remove */
 	
 	public function testRemoveExact(){
 		$prefixKEY = "testRemoveExact:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			TestCase.assertFalse(con.remove(prefixKEY + KEY, VALUE));
-			fail("expected error 1009");
+			$this->assertFalse($con->remove($prefixKEY + $this->KEY, $this->VALUE));
+			$this->fail("expected error 1009");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1009){
-				fail("expected error 1009");
+		catch(CacheException $e){
+			if($e->getCode() != 1009){
+				$this->fail("expected error 1009");
 			}
 		}
 	
@@ -145,53 +145,53 @@ class CacheTest extends TestCase{
 	
 	public function testRemove(){
 		$prefixKEY = "testRemove:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		TestCase.assertNull((String)con.get(prefixKEY + KEY));
-		TestCase.assertFalse(con.remove(prefixKEY + KEY));
+		$this->assertNull((String)$con->get($prefixKEY + $this->KEY));
+		$this->assertFalse($con->remove($prefixKEY + $this->KEY));
 	
-		con.put(prefixKEY + KEY, VALUE, 0, 0);
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
 	
-		TestCase.assertEquals(VALUE, (String)con.get(prefixKEY + KEY));
+		$this->assertEquals($this->VALUE, (String)$con->get($prefixKEY + $this->KEY));
 	
-		TestCase.assertTrue(con.remove(prefixKEY + KEY));
+		$this->assertTrue($con->remove($prefixKEY + $this->KEY));
 	}
 	
 	/* timeToLive */
 	
 	public function testTimeToLive(){
 		$prefixKEY = "testTimeToLive:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		con.put(prefixKEY + KEY, VALUE, 1000, 0);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(800);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(400);
-		assertNull(con.get(prefixKEY + KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 0);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(800);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(400);
+		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testTimeToLiveLessThanTimeToIdle(){
 		$prefixKEY = "testTimeToLiveLessThanTimeToIdle:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		con.put(prefixKEY + KEY, VALUE, 1000, 5000);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(1200);
-		assertNull(con.get(prefixKEY + KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 5000);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(1200);
+		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testNegativeTimeToLive(){
 		$prefixKEY = "testNegativeTimeToLive:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			con.put(prefixKEY + KEY, VALUE, -1, 5000);
-			fail("expected timeToLive is invalid!");
+			$con->put($prefixKEY + $this->KEY, $this->VALUE, -1, 5000);
+			$this->fail("expected timeToLive is invalid!");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1004 || !e.getMessage().equals("Bad command syntax error!")){
-				fail();
+		catch(CacheException $e){
+			if($e->getCode() != 1004 || !$e->getMessage()->equals("Bad command syntax error!")){
+				$this->fail();
 			}
 		}
 	
@@ -201,44 +201,44 @@ class CacheTest extends TestCase{
 	
 	public function testTimeToIdle(){
 		$prefixKEY = "testTimeToIdle:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		con.put(prefixKEY + KEY, VALUE, 0, 1000);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(800);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(800);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(1200);
-		assertNull(con.get(prefixKEY + KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 1000);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(800);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(800);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(1200);
+		assertNull($con->get($prefixKEY + $this->KEY));
 	
 	}
 	
 	public function testTimeToIdleLessThanTimeToLive(){
 		$prefixKEY = "testTimeToIdleLessThanTimeToLive:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
-		con.put(prefixKEY + KEY, VALUE, 20000, 1000);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(800);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(800);
-		assertEquals(con.get(prefixKEY + KEY), VALUE);
-		Thread.sleep(1200);
-		assertNull(con.get(prefixKEY + KEY));
+		$con->put($prefixKEY + $this->KEY, $this->VALUE, 20000, 1000);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(800);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(800);
+		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		Thread->sleep(1200);
+		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testNegativeTimeToIdle(){
 		$prefixKEY = "testNegativeTimeToIdle:";
-		BrCacheConnection con = new BrCacheConnectionImp($this->SERVER_HOST, SERVER_PORT);
+		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
-			con.put(prefixKEY + KEY, VALUE, 0, -1);
-			fail("expected timeToIdle is invalid!");
+			$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, -1);
+			$this->fail("expected timeToIdle is invalid!");
 		}
-		catch(CacheException e){
-			if(e.getCode() != 1004 || !e.getMessage().equals("Bad command syntax error!")){
-				fail();
+		catch(CacheException $e){
+			if($e->getCode() != 1004 || !$e->getMessage()->equals("Bad command syntax error!")){
+				$this->fail();
 			}
 		}
 	}
