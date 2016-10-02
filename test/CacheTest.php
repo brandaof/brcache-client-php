@@ -165,9 +165,9 @@ class CacheTest extends TestCase{
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 0);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(800);
+		usleep(800000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(400);
+		usleep(400000);
 		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
@@ -177,7 +177,7 @@ class CacheTest extends TestCase{
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 5000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(1200);
+		usleep(1200000);
 		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
@@ -190,7 +190,7 @@ class CacheTest extends TestCase{
 			$this->fail("expected timeToLive is invalid!");
 		}
 		catch(CacheException $e){
-			if($e->getCode() != 1004 || !$e->getMessage()->equals("Bad command syntax error!")){
+			if($e->getCode() != 1004 || strcmp($e->getMessage(),"Bad command syntax error!") != 0){
 				$this->fail();
 			}
 		}
@@ -205,11 +205,11 @@ class CacheTest extends TestCase{
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 1000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(800);
+		usleep(800000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(800);
+		usleep(800000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(1200);
+		usleep(1200000);
 		assertNull($con->get($prefixKEY + $this->KEY));
 	
 	}
@@ -220,11 +220,11 @@ class CacheTest extends TestCase{
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 20000, 1000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(800);
+		usleep(800000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(800);
+		usleep(800000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
-		Thread->sleep(1200);
+		usleep(1200000);
 		assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
@@ -237,7 +237,7 @@ class CacheTest extends TestCase{
 			$this->fail("expected timeToIdle is invalid!");
 		}
 		catch(CacheException $e){
-			if($e->getCode() != 1004 || !$e->getMessage()->equals("Bad command syntax error!")){
+			if($e->getCode() != 1004 || strcmp($e->getMessage(),"Bad command syntax error!") != 0){
 				$this->fail();
 			}
 		}
