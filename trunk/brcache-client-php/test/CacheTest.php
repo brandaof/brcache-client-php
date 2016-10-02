@@ -1,4 +1,5 @@
 <?php
+require_once '../brcache/BRCacheConnection.php';
 use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase{
@@ -23,7 +24,7 @@ class CacheTest extends TestCase{
 	
 	public function testReplaceSuccess(){
 		$prefixKEY = "testReplaceSuccess:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
@@ -33,7 +34,7 @@ class CacheTest extends TestCase{
 	
 	public function testReplaceExact(){
 		$prefixKEY = "testReplaceSuccess:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 		try{
 			$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
 			$this->fail("expected error 1009");
@@ -47,7 +48,7 @@ class CacheTest extends TestCase{
 	
 	public function testReplaceExactSuccess(){
 		$prefixKEY = "testReplaceExactSuccess:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0);
@@ -64,7 +65,7 @@ class CacheTest extends TestCase{
 	
 	public function testputIfAbsent(){
 		$prefixKEY = "testputIfAbsent:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -79,7 +80,7 @@ class CacheTest extends TestCase{
 	
 	public function testputIfAbsentExistValue(){
 		$prefixKEY = "testputIfAbsentExistValue:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE2, 0, 0));
@@ -96,7 +97,7 @@ class CacheTest extends TestCase{
 	
 	public function testPut(){
 		$prefixKEY = "testPut:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -107,7 +108,7 @@ class CacheTest extends TestCase{
 	
 	public function testGet(){
 		$prefixKEY = "testGet:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -116,7 +117,7 @@ class CacheTest extends TestCase{
 	
 	public function testGetOverride(){
 		$prefixKEY = "testGetOverride:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -129,7 +130,7 @@ class CacheTest extends TestCase{
 	
 	public function testRemoveExact(){
 		$prefixKEY = "testRemoveExact:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$this->assertFalse($con->remove($prefixKEY + $this->KEY, $this->VALUE));
@@ -145,7 +146,7 @@ class CacheTest extends TestCase{
 	
 	public function testRemove(){
 		$prefixKEY = "testRemove:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$this->assertNull((String)$con->get($prefixKEY + $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY + $this->KEY));
@@ -161,7 +162,7 @@ class CacheTest extends TestCase{
 	
 	public function testTimeToLive(){
 		$prefixKEY = "testTimeToLive:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 0);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -173,7 +174,7 @@ class CacheTest extends TestCase{
 	
 	public function testTimeToLiveLessThanTimeToIdle(){
 		$prefixKEY = "testTimeToLiveLessThanTimeToIdle:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 5000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -183,7 +184,7 @@ class CacheTest extends TestCase{
 	
 	public function testNegativeTimeToLive(){
 		$prefixKEY = "testNegativeTimeToLive:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$con->put($prefixKEY + $this->KEY, $this->VALUE, -1, 5000);
@@ -201,7 +202,7 @@ class CacheTest extends TestCase{
 	
 	public function testTimeToIdle(){
 		$prefixKEY = "testTimeToIdle:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 1000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -216,7 +217,7 @@ class CacheTest extends TestCase{
 	
 	public function testTimeToIdleLessThanTimeToLive(){
 		$prefixKEY = "testTimeToIdleLessThanTimeToLive:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 20000, 1000);
 		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -230,7 +231,7 @@ class CacheTest extends TestCase{
 	
 	public function testNegativeTimeToIdle(){
 		$prefixKEY = "testNegativeTimeToIdle:";
-		$con = new BrCacheConnectionImp($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		try{
 			$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, -1);

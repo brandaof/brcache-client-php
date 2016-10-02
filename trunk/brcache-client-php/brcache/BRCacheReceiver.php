@@ -206,7 +206,7 @@ class BRCacheReceiver{
 		$message = substr($resp, 12, strlen($resp) - 12);
 		
 		$error = new stdClass();
-		$error->code    = $code;
+		$error->code    = intval($code);
 		$error->message = $message;
 		return $error;
 	}

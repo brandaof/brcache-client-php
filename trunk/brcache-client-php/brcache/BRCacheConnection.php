@@ -70,7 +70,7 @@ class BRCacheConnection{
 		$this->host      = $host;
 		$this->port      = $port;
 		$this->pcon      = $pcon;
-		$this->pointer   = $pcon? pfsockopen($this->$host, $port) : fsockopen($this->$host, $port);
+		$this->pointer   = $pcon? pfsockopen($this->host, $port) : fsockopen($this->host, $port);
 		$this->sender    = new BRCacheSender();  
 		$this->receiver  = new BRCacheReceiver();  
 	}
