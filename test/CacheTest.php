@@ -165,11 +165,11 @@ class CacheTest extends TestCase{
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 0);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(800000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(400000);
-		assertNull($con->get($prefixKEY + $this->KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testTimeToLiveLessThanTimeToIdle(){
@@ -177,9 +177,9 @@ class CacheTest extends TestCase{
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 5000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(1200000);
-		assertNull($con->get($prefixKEY + $this->KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testNegativeTimeToLive(){
@@ -205,13 +205,13 @@ class CacheTest extends TestCase{
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 1000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(800000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(800000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(1200000);
-		assertNull($con->get($prefixKEY + $this->KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
 	
 	}
 	
@@ -220,13 +220,13 @@ class CacheTest extends TestCase{
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 20000, 1000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(800000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(800000);
-		assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
+		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
 		usleep(1200000);
-		assertNull($con->get($prefixKEY + $this->KEY));
+		$this->assertNull($con->get($prefixKEY + $this->KEY));
 	}
 	
 	public function testNegativeTimeToIdle(){

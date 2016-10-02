@@ -201,7 +201,7 @@ class BRCacheConnection{
 			return $this->receiver->processPutResult($this->pointer);
 		}
 		catch(CacheException $e){
-			throw e;
+			throw $e;
 		}
 		catch(Exception $e){
 			throw new CacheException(null, null, $e);
