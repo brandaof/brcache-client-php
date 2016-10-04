@@ -119,6 +119,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testPut:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -130,6 +131,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testGet:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -139,6 +141,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testGetOverride:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -173,12 +176,12 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testRemove:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
-		$this->assertNull((String)$con->get($prefixKEY . $this->KEY));
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY . $this->KEY));
 	
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 	
-		$this->assertEquals($this->VALUE, (String)$con->get($prefixKEY . $this->KEY));
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 	
 		$this->assertTrue($con->remove($prefixKEY . $this->KEY));
 	}
