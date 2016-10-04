@@ -45,7 +45,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testReplaceExactSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
-		$con->put($prefixKEY . KEY, $this->VALUE, 0, 0);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 		$this->assertTrue($con->replace($prefixKEY . $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
 		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
@@ -109,6 +109,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testRemoveExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE));
 	
@@ -174,7 +175,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$this->VALUE, 
 			$this->VALUE2, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}, 0, 0));
 		$con->commit();
 		$this->assertFalse($con->replaceValue(
@@ -182,7 +183,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$this->VALUE, 
 			$this->VALUE2, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}, 0, 0));
 	}
 	
@@ -199,7 +200,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$this->VALUE, 
 			$this->VALUE2, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}, 0, 0));
 			
 		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
@@ -294,7 +295,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}));
 	
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
@@ -305,14 +306,14 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$prefixKEY . $this->KEY, 
 			$this->VALUE2, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}));
 			
 		$this->assertTrue($con->remove(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}));
 			
 		$con->commit();
@@ -321,7 +322,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			function($a, $b){
-				return strcmp($a,$b);
+				return strcmp($a,$b) == 0;
 			}));
 	}
 	
