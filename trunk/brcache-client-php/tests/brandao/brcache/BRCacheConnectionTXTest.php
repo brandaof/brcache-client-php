@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '\brandao\brcache\BRCacheConnection.php';
+require_once 'C:\develop\Apache2.4.18\htdocs\brcache-client-php\brandao\brcache\BRCacheConnection.php';
 
 class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	
@@ -25,6 +25,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testReplaceExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 		
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertFalse($con->replaceValue(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
@@ -39,9 +40,9 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testReplaceExactSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 				
-		$con->put($prefixKEY . KEY, $this->VALUE, 0, 0);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
-		$this->assertTrue($con->replace(
+		$this->assertTrue($con->replaceValue(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			$this->VALUE2, 
@@ -58,6 +59,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testputIfAbsent:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 				
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 	}
@@ -77,6 +79,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testRemoveExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 				
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE));
 		
@@ -84,14 +87,14 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 		
-		$this->assertFalse($con->remove(
-			prefixKEY . KEY, 
-			VALUE2, 
+		$this->assertFalse($con->removeValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE2, 
 			function($a, $b){
 				return strcmp($a,$b);
 			}));
 			
-		$this->assertTrue($con->remove(
+		$this->assertTrue($con->removeValue(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			function($a, $b){
