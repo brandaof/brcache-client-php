@@ -62,17 +62,6 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 				return strcmp($a,$b) == 0;
 			}, 0, 0));
 		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	
 	/* putIfAbsent */
