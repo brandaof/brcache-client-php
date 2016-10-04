@@ -136,15 +136,15 @@ class BRCacheConnection{
 			$key, $oldValue,
 			$newValue, $cmp, $timeToLive = 0, $timeToIdle = 0){
 		
-		$localTransaction = null;
-		
 		if(!is_callable($cmp)){
 			throw new CacheException("cmp is not a valid function", 0, null);
 		}
 		
+		$localTransaction = null;
+		
 		try{
 			$localTransaction = $this->startLocalTransaction();
-			$o = $this->get(key, true);
+			$o = $this->get($key, true);
 
 			if($o != null && $cmp($o, $oldValue)){
 				$result = $this->put($key, $newValue, $timeToLive, $timeToIdle);
@@ -154,7 +154,7 @@ class BRCacheConnection{
 			}
 				
 			$this->commitLocalTransaction($localTransaction);
-			return result;
+			return $result;
 		}
 		catch(Exception $e){
 			throw $this->rollbackLocalTransaction($localTransaction, $e);
@@ -173,7 +173,7 @@ class BRCacheConnection{
 	 */
 	public function putIfAbsent(
 			$key, $value, $timeToLive = 0, $timeToIdle = 0){
-		
+
 		$localTransaction = null;
 		
 		try{
@@ -181,7 +181,7 @@ class BRCacheConnection{
 			$o = $this->get($key, true);
 			$this->set($key, $value, $timeToLive, $timeToIdle);
 			$this->commitLocalTransaction($localTransaction);
-			return o;
+			return $o;
 		}
 		catch(Exception $e){
 			throw $this->rollbackLocalTransaction($localTransaction, $e);
@@ -419,7 +419,7 @@ class BRCacheConnection{
 	}
 	
 	private function commitLocalTransaction($local){
-		if($local != null && local){
+		if($local != null && $local){
 			$this->commit();
 		}
 	}
