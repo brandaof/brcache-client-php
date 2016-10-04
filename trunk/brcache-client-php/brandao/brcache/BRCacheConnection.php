@@ -138,6 +138,10 @@ class BRCacheConnection{
 		
 		$localTransaction = null;
 		
+		if(!is_callable($cmp)){
+			throw new CacheException("cmp is not a valid function", 0, null);
+		}
+		
 		try{
 			$localTransaction = $this->startLocalTransaction();
 			$o = $this->get(key, true);

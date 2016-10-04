@@ -147,7 +147,7 @@ class BRCacheReceiver{
 		
 		$prefix = substr($resp, 0, strlen($expectedPrefix));
 		
-		if(strcmp($expectedPrefix, $prefix)){
+		if(strcmp($expectedPrefix, $prefix) == 0){
 			$value = substr($resp, strlen($expectedPrefix), strlen($resp));
 			return $value;
 		}
@@ -198,7 +198,9 @@ class BRCacheReceiver{
 	}
 	
 	private function readLine($con){
-		return fgets($con);
+		$lin = fgets($con);
+		$lin = str_replace("\r\n", "", $lin);
+		return $lin;
 	}
 	
 	private function parseError($resp){
