@@ -38,7 +38,14 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testReplaceExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
-		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
+		$con->remove($prefixKEY . $this->KEY);
+		$this->assertFalse($con->replaceValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b) == 0;
+			}, 0, 0));
 	}
 	
 	public function testReplaceExactSuccess(){
@@ -47,8 +54,25 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
-		$this->assertTrue($con->replace($prefixKEY . $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
+		$this->assertTrue($con->replaceValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b) == 0;
+			}, 0, 0));
 		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	/* putIfAbsent */
@@ -57,6 +81,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testputIfAbsent:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 	}
@@ -76,6 +101,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testPut:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -87,6 +113,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testGet:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -96,6 +123,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testGetOverride:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
@@ -111,14 +139,31 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	
 		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
-		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE));
-	
+		$this->assertFalse($con->removeValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			function($a, $b){
+				return strcmp($a,$b) == 0;
+			}));
+			
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 	
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 	
-		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE2));
-		$this->assertTrue($con->remove($prefixKEY . $this->KEY, $this->VALUE));
+		$this->assertFalse($con->removeValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b) == 0;
+			}));
+			
+		$this->assertTrue($con->removeValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			function($a, $b){
+				return strcmp($a,$b) == 0;
+			}));
+			
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 	}
 	
@@ -126,6 +171,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testRemove:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY . $this->KEY));
 	
