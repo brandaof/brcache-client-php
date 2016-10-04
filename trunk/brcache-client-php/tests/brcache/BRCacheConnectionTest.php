@@ -1,8 +1,9 @@
 <?php
-require_once '../brcache/BRCacheConnection.php';
-use PHPUnit\Framework\TestCase;
+//C:\develop\php5.6.26\php C:\php\phpunit.phar C:\develop\Apache2.4.18\htdocs\brcache-client-php\test\CacheTest.php
+//require_once '../brcache/BRCacheConnection.php';
+require_once 'C:\develop\Apache2.4.18\htdocs\brcache-client-php\brcache\BRCacheConnection.php';
 
-class CacheTest extends TestCase{
+class CacheTest extends PHPUnit_Framework_TestCase{
 	
 	private $SERVER_HOST	= "localhost";
 	
@@ -14,11 +15,18 @@ class CacheTest extends TestCase{
 	
 	private $VALUE2			= "val";
 	
+	protected function setUp(){
+	}
+	
+	protected function tearDown(){
+	}
+	
 	/* replace */
 	
 	public function testReplace(){
 		$prefixKEY = "testReplace:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con->remove($prefixKEY + $this->KEY);
 		$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, 0, 0));
 	}
 	

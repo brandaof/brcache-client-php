@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+phpunit_config_file=
+preload_script=
+test_file_pattern=
+test_folders=/brcache-client-php/test
+testing_framework=PHPUnit
