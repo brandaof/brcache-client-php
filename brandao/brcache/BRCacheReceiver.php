@@ -47,7 +47,7 @@ class BRCacheReceiver{
 			
 			$boundary = $this->readLine($con);
 				
-			if(!strcmp($boundary, BRCacheConnection::$BOUNDARY)){
+			if(strcmp($boundary, BRCacheConnection::$BOUNDARY) != 0){
 				throw new CacheException("expected end");
 			}
 				
