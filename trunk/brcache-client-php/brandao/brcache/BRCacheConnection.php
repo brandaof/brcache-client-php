@@ -298,15 +298,15 @@ class BRCacheConnection{
 	
 		try{
 			$localTransaction = $this->startLocalTransaction();
-			$o = $this->get(key, true);
+			$o = $this->get($key, true);
 			if($o != null && $cmp($o,$value)){
-				$result = $this->remove(key);
+				$result = $this->remove($key);
 			}
 			else
 				$result = false;
 	
 			$this->commitLocalTransaction($localTransaction);
-			return result;
+			return $result;
 		}
 		catch(Exception $e){
 			throw $this->rollbackLocalTransaction($localTransaction, $e);
