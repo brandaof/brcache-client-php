@@ -1,9 +1,10 @@
 <?php
 //C:\develop\php5.6.26\php C:\php\phpunit.phar C:\develop\Apache2.4.18\htdocs\brcache-client-php\test\CacheTest.php
 //require_once '../brcache/BRCacheConnection.php';
-require_once 'C:\develop\Apache2.4.18\htdocs\brcache-client-php\brcache\BRCacheConnection.php';
+require_once 'PHPUnit\TextUI\TestRunner.php';
+require_once 'C:\develop\Apache2.4.18\htdocs\brcache-client-php\brandao\brcache\BRCacheConnection.php';
 
-class CacheTest extends PHPUnit_Framework_TestCase{
+class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	private $SERVER_HOST	= "localhost";
 	
@@ -251,5 +252,15 @@ class CacheTest extends PHPUnit_Framework_TestCase{
 			}
 		}
 	}
+
+	static function main() {
 	
+		$suite = new PHPUnit_Framework_TestSuite( __CLASS__);
+		PHPUnit_TextUI_TestRunner::run($suite);
+	}
+		
+}
+
+if (!defined('PHPUnit_MAIN_METHOD')) {
+	BRCacheConnectionTest::main();
 }
