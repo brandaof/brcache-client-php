@@ -19,37 +19,35 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	protected function tearDown(){
 	}
 	
-	/* replace */
+	public function testReplace(){
+		$prefixKEY = "testReplace:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
+	}
+	
+	public function testReplaceSuccess(){
+		$prefixKEY = "testReplaceSuccess:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$this->assertTrue($con->replace($prefixKEY . $this->KEY, $this->VALUE2, 0, 0));
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+	}
 	
 	public function testReplaceExact(){
 		$prefixKEY = "testReplaceExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
-		
-		$con->remove($prefixKEY . $this->KEY);
-		$this->assertFalse($con->replaceValue(
-			$prefixKEY . $this->KEY, 
-			$this->VALUE, 
-			$this->VALUE2, 
-			function($a, $b){
-				return strcmp($a,$b) == 0;
-			}, 0, 0));
-		
+	
+		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
 	}
 	
 	public function testReplaceExactSuccess(){
 		$prefixKEY = "testReplaceExactSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
-				
-		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+	
+		$con->put($prefixKEY . KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
-		$this->assertTrue($con->replaceValue(
-			$prefixKEY . $this->KEY, 
-			$this->VALUE, 
-			$this->VALUE2, 
-			function($a, $b){
-				return strcmp($a,$b) == 0;
-			}, 0, 0));
-		
+		$this->assertTrue($con->replace($prefixKEY . $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
 		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
 	}
 	
@@ -58,8 +56,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	public function testputIfAbsent(){
 		$prefixKEY = "testputIfAbsent:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
-				
-		$con->remove($prefixKEY . $this->KEY);
+	
 		$this->assertNull($con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 	}
@@ -67,10 +64,43 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	public function testputIfAbsentExistValue(){
 		$prefixKEY = "testputIfAbsentExistValue:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
-				
-		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
-		$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE2, 0, 0));
+	
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE2, 0, 0));
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* put */
+	
+	public function testPut(){
+		$prefixKEY = "testPut:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* get */
+	
+	public function testGet(){
+		$prefixKEY = "testGet:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	public function testGetOverride(){
+		$prefixKEY = "testGetOverride:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE2, 0, 0);
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
 	}
 	
 	/* remove */
@@ -78,15 +108,199 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	public function testRemoveExact(){
 		$prefixKEY = "testRemoveExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
-				
-		$con->remove($prefixKEY . $this->KEY);
+	
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE));
-		
+	
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
-		
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	
+		$this->assertFalse($con->remove($prefixKEY . $this->KEY, $this->VALUE2));
+		$this->assertTrue($con->remove($prefixKEY . $this->KEY, $this->VALUE));
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+	}
+	
+	public function testRemove(){
+		$prefixKEY = "testRemove:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$this->assertFalse($con->remove($prefixKEY . $this->KEY));
+	
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	
+		$this->assertTrue($con->remove($prefixKEY . $this->KEY));
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* with explicit transaction */
+	
+	/* replace */
+	
+	public function testExplicitTransactionReplace(){
+		$prefixKEY = "testExplicitTransactionReplace:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
+		$con->commit();
+		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
+	}
+	
+	public function testExplicitTransactionReplaceSuccess(){
+		$prefixKEY = "testExplicitTransactionReplaceSuccess:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$this->assertTrue($con->replace($prefixKEY . $this->KEY, $this->VALUE2, 0, 0));
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	public function testExplicitTransactionReplaceExact(){
+		$prefixKEY = "testExplicitTransactionReplaceExact:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$this->assertFalse($con->replaceValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b);
+			}, 0, 0));
+		$con->commit();
+		$this->assertFalse($con->replaceValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b);
+			}, 0, 0));
+	}
+	
+	public function testExplicitTransactionReplaceExactSuccess(){
+		$prefixKEY = "testExplicitTransactionReplaceExactSuccess:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
 		
+		$this->assertTrue($con->replaceValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, 
+			function($a, $b){
+				return strcmp($a,$b);
+			}, 0, 0));
+			
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* putIfAbsent */
+	
+	public function testExplicitTransactionPutIfAbsent(){
+		$prefixKEY = "testExplicitTransactionPutIfAbsent:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->remove($prefixKEY . $this->KEY);
+		$con->setAutoCommit(false);
+		$this->assertNull($con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	public function testExplicitTransactionPutIfAbsentExistValue(){
+		$prefixKEY = "testExplicitTransactionPutIfAbsentExist$this->VALUE:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY . $this->KEY, $this->VALUE2, 0, 0));
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* put */
+	
+	public function testExplicitTransactionPut(){
+		$prefixKEY = "testExplicitTransactionPut:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* get */
+	
+	public function testExplicitTransactionGet(){
+		$prefixKEY = "testExplicitTransactionGet:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	public function testExplicitTransactionGetOverride(){
+		$prefixKEY = "testExplicitTransactionGetOverride:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->put($prefixKEY . $this->KEY, $this->VALUE2, 0, 0);
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
+		$this->assertEquals($this->VALUE2, $con->get($prefixKEY . $this->KEY));
+	}
+	
+	/* remove */
+	
+	public function testExplicitTransactionRemoveExact(){
+		$prefixKEY = "testExplicitTransactionRemoveExact:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$this->assertFalse($con->removeValue(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			function($a, $b){
+				return strcmp($a,$b);
+			}));
+	
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	
 		$this->assertFalse($con->removeValue(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE2, 
@@ -94,14 +308,41 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 				return strcmp($a,$b);
 			}));
 			
-		$this->assertTrue($con->removeValue(
+		$this->assertTrue($con->remove(
 			$prefixKEY . $this->KEY, 
 			$this->VALUE, 
 			function($a, $b){
-				return strcmp($a,$b) == 0;
+				return strcmp($a,$b);
 			}));
 			
+		$con->commit();
+	
+		$this->assertFalse($con->remove(
+			$prefixKEY . $this->KEY, 
+			$this->VALUE, 
+			function($a, $b){
+				return strcmp($a,$b);
+			}));
+	}
+	
+	public function testExplicitTransactionRemove(){
+		$prefixKEY = "testExplicitTransactionRemove:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+	
+		$con->setAutoCommit(false);
+	
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$this->assertFalse($con->remove($prefixKEY . $this->KEY));
+	
+		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
+	
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	
+		$this->assertTrue($con->remove($prefixKEY . $this->KEY));
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+		$con->commit();
+	
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 	}
-
+	
 }
