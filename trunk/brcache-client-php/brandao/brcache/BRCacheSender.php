@@ -18,9 +18,9 @@ class BRCacheSender{
 			strlen($data) . BRCacheConnection::$SEPARATOR_COMMAND .
 			BRCacheConnection::$DEFAULT_FLAGS . BRCacheConnection::$CRLF;
 		
-		fwrite($con, $header);
-		fwrite($con, $data);
-		fwrite($con, BRCacheConnection::$CRLF);
+		$this->send($con, $header);
+		$this->send($con, $data);
+		$this->send($con, BRCacheConnection::$CRLF);
 	}
 
 	public function replace($con, $key, $value, $timeToLive, $timeToIdle){
@@ -35,9 +35,9 @@ class BRCacheSender{
 			strlen($data) . BRCacheConnection::$SEPARATOR_COMMAND .
 			BRCacheConnection::$DEFAULT_FLAGS . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
-		fwrite($con, $data);
-		fwrite($con, BRCacheConnection::$CRLF);
+		$this->send($con, $header);
+		$this->send($con, $data);
+		$this->send($con, BRCacheConnection::$CRLF);
 	}
 
 	public function set($con, $key, $value, $timeToLive, $timeToIdle){
@@ -52,9 +52,9 @@ class BRCacheSender{
 			strlen($data) . BRCacheConnection::$SEPARATOR_COMMAND .
 			BRCacheConnection::$DEFAULT_FLAGS . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
-		fwrite($con, $data);
-		fwrite($con, BRCacheConnection::$CRLF);
+		$this->send($con, $header);
+		$this->send($con, $data);
+		$this->send($con, BRCacheConnection::$CRLF);
 	}
 
 	public function get($con, $key, $forUpdate){
@@ -65,7 +65,7 @@ class BRCacheSender{
 			($forUpdate? "1" : "0") . BRCacheConnection::$SEPARATOR_COMMAND .
 			BRCacheConnection::$DEFAULT_FLAGS . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function remove($con, $key){
@@ -75,7 +75,7 @@ class BRCacheSender{
 			$key . BRCacheConnection::$SEPARATOR_COMMAND .
 			BRCacheConnection::$DEFAULT_FLAGS . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function beginTransaction($con){
@@ -83,7 +83,7 @@ class BRCacheSender{
 		$header =
 			BRCacheConnection::$BEGIN_TX_COMMAND . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function commitTransaction($con){
@@ -91,7 +91,7 @@ class BRCacheSender{
 		$header =
 			BRCacheConnection::$COMMIT_TX_COMMAND . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function rollbackTransaction($con){
@@ -99,7 +99,7 @@ class BRCacheSender{
 		$header =
 			BRCacheConnection::$ROLLBACK_TX_COMMAND . BRCacheConnection::$CRLF;
 			
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function showVar($con, $var){
@@ -108,13 +108,13 @@ class BRCacheSender{
 			BRCacheConnection::$SHOW_VAR . BRCacheConnection::$SEPARATOR_COMMAND .
 			$var . BRCacheConnection::$CRLF;
 		
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 
 	public function showVars($con){
 	
 		$header = BRCacheConnection::$SHOW_VARS . BRCacheConnection::$CRLF;
-		fwrite($con, $header);
+		$this->send($con, $header);
 	}
 	
 	public function setVar($con, $var, $value){
@@ -124,7 +124,11 @@ class BRCacheSender{
 			$var . BRCacheConnection::$SEPARATOR_COMMAND .
 			$value . BRCacheConnection::$CRLF;
 		
-		fwrite($con, $header);
+		$this->send($con, $header);
+	}
+	
+	private function send($con, $value){
+		fwrite($con, $value);
 	}
 	
 }
