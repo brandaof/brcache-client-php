@@ -1,7 +1,5 @@
 <?php
 //C:\develop\php5.6.26\php C:\php\phpunit.phar C:\develop\Apache2.4.18\htdocs\brcache-client-php\test\CacheTest.php
-//require_once '../brcache/BRCacheConnection.php';
-require_once 'PHPUnit\TextUI\TestRunner.php';
 require_once 'C:\develop\Apache2.4.18\htdocs\brcache-client-php\brandao\brcache\BRCacheConnection.php';
 
 class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
@@ -26,14 +24,14 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testReplace(){
 		$prefixKEY = "testReplace:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 		$con->remove($prefixKEY + $this->KEY);
 		$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, 0, 0));
 	}
 	
 	public function testReplaceSuccess(){
 		$prefixKEY = "testReplaceSuccess:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
 		$this->assertEquals($this->VALUE, $con->get($prefixKEY + $this->KEY));
@@ -43,9 +41,15 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testReplaceExact(){
 		$prefixKEY = "testReplaceSuccess:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 		try{
-			$this->assertFalse($con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0));
+			$con->remove($prefixKEY);
+			$this->assertFalse($con->replaceValue(
+				$prefixKEY + $this->KEY, 
+			$this->VALUE, 
+			$this->VALUE2, function($a, $b){
+				return strcmp($a,$b);
+			},0, 0));
 			$this->fail("expected error 1009");
 		}
 		catch(CacheException $e){
@@ -57,10 +61,17 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testReplaceExactSuccess(){
 		$prefixKEY = "testReplaceExactSuccess:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
-			$con->replace($prefixKEY + $this->KEY, $this->VALUE, $this->VALUE2, 0, 0);
+			$con->replaceValue(
+				$prefixKEY + $this->KEY, 
+				$this->VALUE, 
+				$this->VALUE2, 
+				function($a, $b){
+					return strcmp($a,$b);
+				}, 0, 0);
+				
 			$this->fail("expected error 1009");
 		}
 		catch(CacheException $e){
@@ -74,7 +85,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testputIfAbsent(){
 		$prefixKEY = "testputIfAbsent:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
 			$con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -89,7 +100,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testputIfAbsentExistValue(){
 		$prefixKEY = "testputIfAbsentExistValue:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
 			$this->assertEquals($this->VALUE, $con->putIfAbsent($prefixKEY + $this->KEY, $this->VALUE2, 0, 0));
@@ -106,7 +117,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testPut(){
 		$prefixKEY = "testPut:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -117,7 +128,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testGet(){
 		$prefixKEY = "testGet:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -126,7 +137,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testGetOverride(){
 		$prefixKEY = "testGetOverride:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$this->assertNull($con->get($prefixKEY + $this->KEY));
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 0);
@@ -139,10 +150,15 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testRemoveExact(){
 		$prefixKEY = "testRemoveExact:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
-			$this->assertFalse($con->remove($prefixKEY + $this->KEY, $this->VALUE));
+			$this->assertFalse($con->removeValue(
+				$prefixKEY + $this->KEY, 
+				$this->VALUE,
+				function($a, $b){
+					return strcmp($a,$b);
+				}));
 			$this->fail("expected error 1009");
 		}
 		catch(CacheException $e){
@@ -155,7 +171,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testRemove(){
 		$prefixKEY = "testRemove:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$this->assertNull((String)$con->get($prefixKEY + $this->KEY));
 		$this->assertFalse($con->remove($prefixKEY + $this->KEY));
@@ -171,7 +187,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testTimeToLive(){
 		$prefixKEY = "testTimeToLive:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 0);
 		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -183,7 +199,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testTimeToLiveLessThanTimeToIdle(){
 		$prefixKEY = "testTimeToLiveLessThanTimeToIdle:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 1000, 5000);
 		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -193,7 +209,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testNegativeTimeToLive(){
 		$prefixKEY = "testNegativeTimeToLive:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
 			$con->put($prefixKEY + $this->KEY, $this->VALUE, -1, 5000);
@@ -211,7 +227,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testTimeToIdle(){
 		$prefixKEY = "testTimeToIdle:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, 1000);
 		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -226,7 +242,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testTimeToIdleLessThanTimeToLive(){
 		$prefixKEY = "testTimeToIdleLessThanTimeToLive:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		$con->put($prefixKEY + $this->KEY, $this->VALUE, 20000, 1000);
 		$this->assertEquals($con->get($prefixKEY + $this->KEY), $this->VALUE);
@@ -240,7 +256,7 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	public function testNegativeTimeToIdle(){
 		$prefixKEY = "testNegativeTimeToIdle:";
-		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
 		try{
 			$con->put($prefixKEY + $this->KEY, $this->VALUE, 0, -1);
@@ -253,14 +269,16 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 		}
 	}
 
+	/*
 	static function main() {
-	
 		$suite = new PHPUnit_Framework_TestSuite( __CLASS__);
 		PHPUnit_TextUI_TestRunner::run($suite);
 	}
-		
+	*/
 }
 
+/*
 if (!defined('PHPUnit_MAIN_METHOD')) {
 	BRCacheConnectionTest::main();
 }
+*/
