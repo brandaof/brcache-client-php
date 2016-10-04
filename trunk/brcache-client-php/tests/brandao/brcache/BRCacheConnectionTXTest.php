@@ -278,6 +278,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testExplicitTransactionPut:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$con->setAutoCommit(false);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
@@ -293,6 +294,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testExplicitTransactionGet:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$con->setAutoCommit(false);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
@@ -306,6 +308,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 		$prefixKEY = "testExplicitTransactionGetOverride:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
+		$con->remove($prefixKEY . $this->KEY);
 		$con->setAutoCommit(false);
 		$this->assertNull($con->get($prefixKEY . $this->KEY));
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
