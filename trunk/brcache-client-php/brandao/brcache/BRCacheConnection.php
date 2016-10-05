@@ -78,8 +78,7 @@ class BRCacheConnection{
 	/**
 	 * Fecha a conexão com o servidor.
 	 *
-	 * @throws CacheException Lançada caso ocorra alguma falha ao tentar se
-	 * fechar a conexão com o servidor.
+	 * @throws CacheException Lançada caso ocorra alguma falha ao tentar fechar a conexão com o servidor.
 	 */
 	public function close(){
 		if($this->pcon){
@@ -89,7 +88,7 @@ class BRCacheConnection{
 	}
 	
 	/**
-	 * Verifica se a conexão foi fechada.
+	 * Verifica se a conexão está fechada.
 	 * @return <code>true</code> se a conexão está fechada. Caso contrátio, <code>false</code>.
 	 */
 	public function isClosed(){
@@ -163,7 +162,7 @@ class BRCacheConnection{
 	}
 	
 	/**
-	 * Associa o valor a chave somente se a chave não estiver associada a um valor.
+	 * Associa o valor à chave somente se a chave não estiver associada a um valor.
 	 * @param key chave associada ao valor.
 	 * @param value valor para ser associado à chave.
 	 * @param timeToLive é a quantidade máxima de tempo que um item expira após sua criação.
@@ -214,7 +213,7 @@ class BRCacheConnection{
 	}
 	
 	/**
-	 * Associa o valor a chave somente se a chave não estiver associada a um valor.
+	 * Associa o valor à chave somente se a chave não estiver associada a um valor.
 	 * @param key chave associada ao valor.
 	 * @param value valor para ser associado à chave.
 	 * @param timeToLive é a quantidade máxima de tempo que um item expira após sua criação.
@@ -319,7 +318,7 @@ class BRCacheConnection{
 	 * estiver ligado, todas as operações serão tratadas como transações individuais. Caso contrário,
 	 * as operações serão agrupadas em uma transação que deve ser confirmada com o método {@link BRCacheConnection::commit()} ou
 	 * descartadas com o método {@link BRCacheConnection::rollback()}. Por padrão, cada nova conexão inicia com o
-	 * modo de confirmação automática ligado.
+	 * modo de confirmação automática ligada.
 	 * @param value <code>true</code> para ligar o modo de confirmação automática. Caso contrário, <code>false</code>.
 	 * @throws CacheException Lançada se o estado desejado já estiver em vigor ou se a conexão estiver fechada.
 	 */
