@@ -200,6 +200,7 @@ class BRCacheReceiver{
 	private function readLine($con){
 		$lin = fgets($con);
 		$lin = str_replace("\r\n", "", $lin);
+		//error_log("receive: " . $lin);
 		return $lin;
 	}
 	

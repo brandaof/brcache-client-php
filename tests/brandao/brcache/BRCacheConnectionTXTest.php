@@ -20,12 +20,14 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testReplace(){
+
 		$prefixKEY = "testReplace:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 		$this->assertFalse($con->replace($prefixKEY . $this->KEY, $this->VALUE, 0, 0));
 	}
 	
 	public function testReplaceSuccess(){
+
 		$prefixKEY = "testReplaceSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 		$con->put($prefixKEY . $this->KEY, $this->VALUE, 0, 0);
@@ -35,6 +37,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testReplaceExact(){
+
 		$prefixKEY = "testReplaceExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -49,6 +52,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testReplaceExactSuccess(){
+
 		$prefixKEY = "testReplaceExactSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -67,6 +71,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* putIfAbsent */
 	
 	public function testputIfAbsent(){
+
 		$prefixKEY = "testputIfAbsent:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -76,6 +81,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testputIfAbsentExistValue(){
+
 		$prefixKEY = "testputIfAbsentExistValue:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -87,6 +93,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* put */
 	
 	public function testPut(){
+
 		$prefixKEY = "testPut:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -99,6 +106,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* get */
 	
 	public function testGet(){
+
 		$prefixKEY = "testGet:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -109,6 +117,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testGetOverride(){
+
 		$prefixKEY = "testGetOverride:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -123,6 +132,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* remove */
 	
 	public function testRemoveExact(){
+
 		$prefixKEY = "testRemoveExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -157,6 +167,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testRemove(){
+
 		$prefixKEY = "testRemove:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -177,6 +188,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* replace */
 	
 	public function testExplicitTransactionReplace(){
+
 		$prefixKEY = "testExplicitTransactionReplace:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -187,6 +199,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionReplaceSuccess(){
+
 		$prefixKEY = "testExplicitTransactionReplaceSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -201,6 +214,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionReplaceExact(){
+
 		$prefixKEY = "testExplicitTransactionReplaceExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -223,6 +237,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionReplaceExactSuccess(){
+
 		$prefixKEY = "testExplicitTransactionReplaceExactSuccess:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -247,6 +262,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* putIfAbsent */
 	
 	public function testExplicitTransactionPutIfAbsent(){
+
 		$prefixKEY = "testExplicitTransactionPutIfAbsent:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -260,6 +276,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionPutIfAbsentExistValue(){
+
 		$prefixKEY = "testExplicitTransactionPutIfAbsentExist$this->VALUE:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -275,6 +292,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* put */
 	
 	public function testExplicitTransactionPut(){
+
 		$prefixKEY = "testExplicitTransactionPut:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -291,6 +309,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* get */
 	
 	public function testExplicitTransactionGet(){
+
 		$prefixKEY = "testExplicitTransactionGet:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -305,6 +324,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionGetOverride(){
+
 		$prefixKEY = "testExplicitTransactionGetOverride:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -323,6 +343,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	/* remove */
 	
 	public function testExplicitTransactionRemoveExact(){
+
 		$prefixKEY = "testExplicitTransactionRemoveExact:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	
@@ -365,6 +386,7 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	}
 	
 	public function testExplicitTransactionRemove(){
+
 		$prefixKEY = "testExplicitTransactionRemove:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
 	

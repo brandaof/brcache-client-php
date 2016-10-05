@@ -129,6 +129,7 @@ class BRCacheSender{
 	
 	private function send($con, $value){
 		fwrite($con, $value);
+		//error_log("send: " . str_replace("\r\n", "", $value));
 	}
 	
 }
