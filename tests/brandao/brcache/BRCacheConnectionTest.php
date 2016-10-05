@@ -18,9 +18,28 @@ class BRCacheConnectionTest extends PHPUnit_Framework_TestCase{
 	
 	protected function tearDown(){
 	}
+
+	public function testClose(){
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
+		$this->assertFalse($con->isClosed());
+		$con->close();
+		$this->assertTrue($con->isClosed());
+	}
+	
+	public function testCloseFail(){
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, true);
+		$this->assertFalse($con->isClosed());
+	
+		try{
+			$con->close();
+			$this->fail("expected CacheException");
+		}
+		catch(CacheException $e){
+		}
+	}
 	
 	/* replace */
-	
+
 	public function testReplace(){
 		$prefixKEY = "testReplace:";
 		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT, false);
