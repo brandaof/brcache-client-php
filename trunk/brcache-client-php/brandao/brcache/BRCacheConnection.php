@@ -73,18 +73,6 @@ class BRCacheConnection{
 		$this->pointer   = $pcon? pfsockopen($this->host, $port) : fsockopen($this->host, $port);
 		$this->sender    = new BRCacheSender();  
 		$this->receiver  = new BRCacheReceiver();
-		$this->testConnection();
-	}
-	
-	private function testConnection(){
-		$timezone = time();
-		$this->put("xx", $timezone);
-		$t = $this->get("xx");
-		
-		if($t != $timezone){
-			throw new Exception();
-		}
-		
 	}
 	
 	/**
