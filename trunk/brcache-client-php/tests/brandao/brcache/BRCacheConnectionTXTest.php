@@ -18,6 +18,48 @@ class BRCacheConnectionTXTest extends PHPUnit_Framework_TestCase{
 	
 	protected function tearDown(){
 	}
+
+	public function testCommitFail(){
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		try{
+			$con->commit();
+			$this->fail("expected CacheException");
+		}
+		catch(CacheException $e){
+		}
+	}
+	
+	public function testCommit(){
+		$prefixKEY = "testCommit:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con->remove($prefixKEY . $this->KEY);
+		$con->setAutoCommit(false);
+		$this->assertFalse($con->put($prefixKEY . $this->KEY, $this->VALUE));
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->commit();
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+	}
+
+	public function testRollbackFail(){
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		try{
+			$con->rollback();
+			$this->fail("expected CacheException");
+		}
+		catch(CacheException $e){
+		}
+	}
+	
+	public function testRollback(){
+		$prefixKEY = "testRollback:";
+		$con = new BrCacheConnection($this->SERVER_HOST, $this->SERVER_PORT);
+		$con->remove($prefixKEY . $this->KEY);
+		$con->setAutoCommit(false);
+		$this->assertFalse($con->put($prefixKEY . $this->KEY, $this->VALUE));
+		$this->assertEquals($this->VALUE, $con->get($prefixKEY . $this->KEY));
+		$con->rollback();
+		$this->assertNull($con->get($prefixKEY . $this->KEY));
+	}
 	
 	public function testReplace(){
 
