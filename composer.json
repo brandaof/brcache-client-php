@@ -3,12 +3,12 @@
     "description": "BRCache client",
     "version": "1.0.0-beta4",
     "license": "Apache-2.0",
-    "authors": {
+    "authors": [{
             "name": "Brandao Afonso",
             "email": "afonso.rbn@gmail.com",
             "homepage": "http://brcache.brandao.org",
             "role": "Developer"
-    },
+    }],
     "support": {
         "email": "afonso.rbn@gmail.com"
     },
