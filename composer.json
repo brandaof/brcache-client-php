@@ -1,0 +1,27 @@
+{
+    "name": "brandao/brcache-client",
+    "description": "BRCache client",
+    "version": "1.0.0-beta4",
+    "license": "Apache-2.0",
+    "authors": {
+            "name": "Brandao Afonso",
+            "email": "afonso.rbn@gmail.com",
+            "homepage": "http://brcache.brandao.org",
+            "role": "Developer"
+    },
+    "support": {
+        "email": "afonso.rbn@gmail.com"
+    },
+    "require": {
+        "php": "^5.3.0 || ^7.0",
+    }
+    "autoload": {
+        "exclude-from-classmap": ["/tests/", "/test/", "/tests/"]
+    },
+    "repositories": {
+        "git": {
+            "type": "git",
+            "url": "https://github.com/brandaof/brcache-client-php"
+        }
+    }
+}
