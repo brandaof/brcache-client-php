@@ -13,7 +13,7 @@
         "email": "afonso.rbn@gmail.com"
     },
     "require": {
-        "php": "^5.3.0 || ^7.0",
+        "php": "^5.3.0 || ^7.0"
     }
     "autoload": {
         "exclude-from-classmap": ["/tests/", "/test/", "/tests/"]
