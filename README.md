@@ -63,7 +63,7 @@ class BRCacheConnection{
 - set(): Associa o valor à chave somente se a chave não estiver associada a um valor.
 - get(): Obtém o valor associado à chave bloqueando ou não seu acesso as demais transações.
 - remove(): Remove o valor associado à chave.
-- removeValue(): Remove o valor assoiado à chave somente se ele for igual a um determinado valor.
+- removeValue(): Remove o valor associado à chave somente se ele for igual a um determinado valor.
 - setAutoCommit(): Define o modo de confirmação automática.
 - isAutoCommit(): Obtém o estado atual do modo de confirmação automática.
 - commit(): Confirma todas as operações da transação atual e libera todos os bloqueios detidos por essa conexão.
